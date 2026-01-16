@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Ticket - RailGo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            position: relative; /* Required for absolute positioning of logo */
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .alert {
+            color: #d9534f;
+        }
+        .ticket-details {
+            background-color: #fff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-image: url("{{ url_for('static', filename='railgo-high-resolution-logo.png') }}");
+            background-size: cover; /* Cover the entire area */
+            background-repeat: no-repeat;
+            background-position: center center; /* Position the logo at the center */
+            opacity: 0.95; /* Set transparency for readability */
+            position: relative;
+            z-index: 1; /* Ensure the content is above the background */
+        }
+        .ticket-heading {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .ticket-details-content {
+            background-color: rgba(255, 255, 255, 0.85); /* Light white with transparency */
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 2; /* Ensure content stays on top */
+            position: relative;
+        }
+
+        /* Print styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-section, .print-section * {
+                visibility: visible;
+            }
+            .print-section {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+
+            /* Force background image to be visible in the print version */
+            .ticket-details {
+                background-image: url("{{ url_for('static', filename='railgo-high-resolution-logo.png') }}") !important;
+                -webkit-print-color-adjust: exact; /* Ensures color adjustments are accurate */
+                print-color-adjust: exact; /* Force browsers to respect color and background */
+            }
+        }
+
+        /* Styles for attractive alerts */
+        .alert-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .alert-box {
+            position: relative;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        .alert-box .alert-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .alert-box .alert-message {
+            flex-grow: 1;
+        }
+        .alert-box .close-btn {
+            cursor: pointer;
+            padding: 5px;
+            font-size: 18px;
+            background: transparent;
+            border: none;
+            color: white;
+        }
+        .alert-success {
+            background-color: #28a745;
+            border: 1px solid #218838;
+        }
+        .alert-error {
+            background-color: #dc3545;
+            border: 1px solid #c82333;
+        }
+        .alert-warning {
+            background-color: #ffc107;
+            border: 1px solid #e0a800;
+            color: #212529;
+        }
+        .alert-info {
+            background-color: #17a2b8;
+            border: 1px solid #117a8b;
+        }
+        /* Styles for the logo */
+        .railgo-logo {
+            position: absolute; /* Absolute positioning */
+            top: 20px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            width: 100px; /* Adjust the size as needed */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+</head>
+<body>
+    <!-- RailGo Logo -->
+    <img src="{{ url_for('static', filename='railgo-high-resolution-logo.png') }}" alt="RailGo Logo" class="railgo-logo">
+
+    <h1>Book Ticket</h1>
+
+    <!-- Attractive Alert Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="alert-container">
+            {% for category, message in messages %}
+                <div class="alert-box alert-{{ category }}">
+                    <span class="alert-message">{{ message }}</span>
+                    <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+
+        <label for="age">Age:</label>
+        <input type="number" name="age" required>
+
+        <label for="gender">Gender:</label>
+        <select name="gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+
+        <label for="address">Address:</label>
+        <textarea name="address" rows="4" required></textarea>
+
+        <label for="mobile_number">Mobile Number:</label>
+        <input type="text" name="mobile_number" maxlength="10" required>
+
+        <label for="travel_date">Travel Date:</label>
+        <input type="date" name="travel_date" required>
+
+        <label for="starting_station">Starting Station:</label>
+        <input type="text" name="starting_station" required>
+
+        <label for="destination_station">Destination Station:</label>
+        <input type="text" name="destination_station" required>
+
+        <label for="coach_type">Coach Type:</label>
+        <select name="coach_type" required>
+            <option value="AC1">AC1</option>
+            <option value="AC2">AC2</option>
+            <option value="Sleeper">Sleeper</option>
+            <option value="Seater">Seater</option>
+        </select>
+
+        <!-- Removed Distance input field -->
+        
+        <button type="submit">Book Ticket</button>
+    </form>
+
+    <!-- Display Ticket Details After Booking -->
+    {% if session['ticket_info'] %}
+    <div class="ticket-details print-section">
+        <div class="ticket-details-content">
+            <h2 class="ticket-heading">RAILGO TRAIN TICKET</h2>
+            <p><strong>PNR Number:</strong> {{ session['ticket_info']['pnr_number'] }}</p>
+            <p><strong>Travel Date:</strong> {{ session['ticket_info']['travel_date'] }}</p>
+            <p><strong>Starting Station:</strong> {{ session['ticket_info']['starting_station'] }}</p>
+            <p><strong>Destination Station:</strong> {{ session['ticket_info']['destination_station'] }}</p>
+            <p><strong>Coach Type:</strong> {{ session['ticket_info']['coach_type'] }}</p>
+            <p><strong>Distance:</strong> {{ session['ticket_info']['distance'] }} km</p>
+
+            <h3>Passenger Information</h3>
+            <p><strong>Name:</strong> {{ session['ticket_info']['name'] }}</p>
+            <p><strong>Age:</strong> {{ session['ticket_info']['age'] }}</p>
+            <p><strong>Gender:</strong> {{ session['ticket_info']['gender'] }}</p>
+            <p><strong>Address:</strong> {{ session['ticket_info']['address'] }}</p>
+            <p><strong>Mobile Number:</strong> {{ session['ticket_info']['mobile_number'] }}</p>
+
+            <button onclick="window.print()">Print Ticket</button>
+        </div>
+    </div>
+    {% endif %}
+
+    <a href="{{ url_for('menu_page') }}">Back to Menu</a>
+</body>
+</html>

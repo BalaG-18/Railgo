@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - RailGo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* Styles for attractive alerts */
+        .alert-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .alert-box {
+            position: relative;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        .alert-box .alert-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .alert-box .alert-message {
+            flex-grow: 1;
+        }
+        .alert-box .close-btn {
+            cursor: pointer;
+            padding: 5px;
+            font-size: 18px;
+            background: transparent;
+            border: none;
+            color: white;
+        }
+        .alert-success {
+            background-color: #28a745;
+            border: 1px solid #218838;
+        }
+        .alert-error {
+            background-color: #dc3545;
+            border: 1px solid #c82333;
+        }
+        .alert-warning {
+            background-color: #ffc107;
+            border: 1px solid #e0a800;
+            color: #212529;
+        }
+        .alert-info {
+            background-color: #17a2b8;
+            border: 1px solid #117a8b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sign Up</h1>
+
+    <!-- Attractive Alert Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="alert-container">
+            {% for category, message in messages %}
+                <div class="alert-box alert-{{ category }}">
+                    
+                    <span class="alert-message">{{ message }}</span>
+                    <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+    <form method="POST">
+        <label for="username">Username (Email):</label>
+        <input type="text" name="username" id="username" required>
+        
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
+        
+        <button type="submit">Sign Up</button>
+    </form>
+    <p style="text-align: center;">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - RailGo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            background-image: url('{{ url_for('static', filename='image1.png') }}'); /* Set the background image */
+            background-size: cover; /* Cover the entire page */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background from repeating */
+            height: 100vh; /* Ensure body takes full viewport height */
+            color: white; /* Change text color for better visibility */
+            position: relative; /* Needed for absolute positioning of the icon */
+        }
+        h1 {
+            text-align: center;
+            color: #fff; /* Set a contrasting color for the heading */
+            margin-top: 20px; /* Add some space at the top */
+        }
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .menu-options a {
+            display: block;
+            text-align: center;
+            background-color: rgba(76, 175, 80, 0.8); /* Semi-transparent background */
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            width: 200px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .menu-options a:hover {
+            background-color: rgba(69, 160, 73, 0.9); /* Darker on hover */
+        }
+        .menu-options a:active {
+            background-color: rgba(56, 142, 60, 1); /* Active state */
+        }
+        /* Styles for the user icon */
+        .user-icon {
+            position: absolute;
+            top: 20px; /* Distance from the top */
+            left: 20px; /* Distance from the left */
+            width: 40px; /* Width of the icon */
+            height: 40px; /* Height of the icon */
+            border-radius: 50%; /* Make it circular */
+            background-image: url('{{ url_for('static', filename='image.png') }}'); /* User icon image */
+            background-size: cover; /* Cover the entire div */
+            cursor: pointer; /* Pointer cursor on hover */
+            border: 2px solid white; /* Optional: border for better visibility */
+        }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.7); /* Fallback color for modal */
+            color: white;
+        }
+        .modal-content {
+            background-color: #333; /* Dark background */
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 8px; /* Rounded corners */
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Styles for attractive alerts */
+        .alert-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .alert-box {
+            position: relative;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        .alert-box .alert-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .alert-box .alert-message {
+            flex-grow: 1;
+        }
+        .alert-box .close-btn {
+            cursor: pointer;
+            padding: 5px;
+            font-size: 18px;
+            background: transparent;
+            border: none;
+            color: white;
+        }
+        .alert-success {
+            background-color: #28a745;
+            border: 1px solid #218838;
+        }
+        .alert-error {
+            background-color: #dc3545;
+            border: 1px solid #c82333;
+        }
+        .alert-warning {
+            background-color: #ffc107;
+            border: 1px solid #e0a800;
+            color: #212529;
+        }
+        .alert-info {
+            background-color: #17a2b8;
+            border: 1px solid #117a8b;
+        }
+    </style>
+    <script>
+        function showEmail() {
+            const email = '{{ session["username"] }}'; // Replace with actual email variable
+            document.getElementById('emailModalContent').textContent = `Your email is: ${email}`;
+            document.getElementById('emailModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('emailModal').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <!-- User Icon -->
+    <div class="user-icon" onclick="showEmail()"></div>
+
+    <h1>Welcome to RailGo</h1>
+
+    <!-- Attractive Alert Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="alert-container">
+            {% for category, message in messages %}
+                <div class="alert-box alert-{{ category }}">
+                    
+                    <span class="alert-message">{{ message }}</span>
+                    <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="menu-options">
+        <a href="{{ url_for('book_ticket') }}">Book Ticket</a>
+        <a href="{{ url_for('personal_info') }}">Personal Information</a>
+        <a href="{{ url_for('change_password') }}">Change Password</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <!-- Modal for email display -->
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Email Information</h2>
+            <p id="emailModalContent"></p>
+        </div>
+    </div>
+</body>
+</html>
